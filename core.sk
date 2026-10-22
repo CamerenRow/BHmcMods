@@ -3,6 +3,7 @@ variables:
     {block.break} = true
     {argument} = ""
     {frozen::*} = false
+    {ver} = 1.1.1
 
 command /clearchat:
     trigger:
@@ -274,7 +275,7 @@ command /core [<text>]:
                 execute console command "sk reload core"
                 send "&aReloaded Core." to sender
             else:
-                send "&cThat was not a valid selection. Use /core for help." to sender.
+                send "&cThat was not a valid selection. Use /core for help." to sender
         else if player has permission "core.use":
             if arg-1 is not set:
                 send "&cUsage: /core (version/reload)" to sender
@@ -284,7 +285,7 @@ command /core [<text>]:
                 execute console command "sk reload core"
                 send "&aReloaded Core." to sender
             else:
-                send "&cThat was not a valid selection. Use /core for help." to sender.
+                send "&cThat was not a valid selection. Use /core for help." to sender
         else:
             if arg-1 is not set:
                 send "&cUnknown or incomplete command. See below for error%nl%&c&ncore&c<--&o[HERE]" to player

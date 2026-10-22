@@ -229,7 +229,7 @@ command /dickheads:
 
 command /help:
     trigger:
-        if player has permission help.use:
+        if executor is console or player has permission "help.use":
             send "&a-----------------------[Core Help]-----------------------" to player
             send "&c/clearchat - clears the chat" to player
             send "&c/togglechat - toggles the chat" to player

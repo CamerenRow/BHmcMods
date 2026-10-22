@@ -230,7 +230,7 @@ command /dickheads:
 command /help:
     trigger:
         if executor is console:
-            send "&a-----------------------[Core Help]-----------------------" to sender
+            send "&a----------[Core Help]----------" to sender
             send "&c/clearchat - clears the chat" to sender
             send "&c/togglechat - toggles the chat" to sender
             send "&c/togglebreak - toggles breaking blocks" to sender
@@ -242,10 +242,10 @@ command /help:
             send "&c/enderscare <player> - plays ender dragon sounds" to sender
             send "&c/creeperscare <player> - plays creeper sounds" to sender
             send "&c/freeze <player> - freezes a player" to sender
-            send "&a-----------------------[Core Help]-----------------------" to sender
+            send "&a----------[Core Help]----------" to sender
             stop
         else if player has permission "help.use":
-            send "&a-----------------------[Core Help]-----------------------" to player
+            send "&a----------[Core Help]----------" to player
             send "&c/clearchat - clears the chat" to player
             send "&c/togglechat - toggles the chat" to player
             send "&c/togglebreak - toggles breaking blocks" to player
@@ -257,7 +257,7 @@ command /help:
             send "&c/enderscare <player> - plays ender dragon sounds" to player
             send "&c/creeperscare <player> - plays creeper sounds" to player
             send "&c/freeze <player> - freezes a player" to player
-            send "&a-----------------------[Core Help]-----------------------" to player
+            send "&a----------[Core Help]----------" to player
             stop
         else:
             send "&cYou do not have permission to execute this command." to player

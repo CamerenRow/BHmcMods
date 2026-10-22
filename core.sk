@@ -224,5 +224,5 @@ on command:
 
 command /dickheads:
     trigger:
-        send "Bailyn H." to all players
+        send "Bailyn H., Lucas H." to all players
         stop

@@ -1,0 +1,228 @@
+variables:
+    {chat.muted} = false
+    {block.break} = true
+    {argument} = ""
+    {frozen::*} = false
+
+command /clearchat:
+    trigger:
+        if player has permission "clearchat.use":
+            loop 200 times:
+                send "&r"
+            send "&aChat cleared by &b%player%&a!" to all players
+        else: 
+            send "&cUnknown or incomplete command. See below for error" to player
+            send "&c&nclearchat&r&c<--&o[HERE]" to player
+
+command /togglechat:
+    permission: togglechat.use
+    permission message: &cUnknown or incomplete command. See below for error%nl%&c&ntogglechat&r&c<--&o[HERE]
+    trigger:
+        if {chat.muted} is false:
+            set {chat.muted} to true
+            broadcast "&cChat has been muted."
+        else:
+            set {chat.muted} to false
+            broadcast "&aChat has been enabled."
+
+on chat:
+    if {chat.muted} is true:
+        if player has permission "clearchat.bypass":
+            stop
+        else:
+            send "&cYou cannot chat right now."
+            cancel event
+
+command /togglebreak:
+    permission: togglebreak.use
+    permission message: &cUnknown or incomplete command. See below for error%nl%&c&ntogglebreak&r&c<--&o[HERE]
+    trigger:
+        if {block.break} is true:
+            set {block.break} to false
+            broadcast "&cBreaking blocks has been disabled."
+        else:
+            set {block.break} to true
+            broadcast "&aBreaking blocks has been enabled."
+
+on block break:
+    if {block.break} is true:
+        stop
+    if {block.break} is false:
+        if player has permission "togglebreak.bypass":
+            stop
+        else:
+            send "&cYou cannot break blocks."
+            cancel event
+
+command /broadcast [<text>]:
+    permission: broadcast.use
+    permission message: &cUnknown or incomplete command. See below for error%nl%&c&nbroadcast %arg-1%&r&c<--&o[HERE]
+    trigger:
+        if arg-1 is not set:
+            send "&cUsage: /broadcast <text>" to player
+            stop
+        if arg-1 matches "^&[0-9a-fA-F]$":
+            # 1. Grab the character (like e)
+            set {_letter} to subtext of arg-1 from 2 to 2
+            
+            # 2. Tell the player the C++ compiler error
+            send "&cmain.cpp:5:10: error: expected arg-1 to have text, got color code instead" to player
+            
+            # 3. Print the code line (using 4 non-breaking spaces for the indent)
+            execute console command "tellraw %player% {""text"":""\u00A0\u00A0\u00A0\u00A0broadcast &%{_letter}%;"",""color"":""yellow""}"
+            
+            # 4. Print the pointer (using 14 non-breaking spaces to line up right under the &)
+            execute console command "tellraw %player% {""text"":""\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0^"",""color"":""yellow""}"
+            stop
+        else:
+            broadcast arg-1
+
+command /kickall [<text>]:
+    permission: kickall.use
+    permission message: &cUnknown or incomplete command. See below for error%nl%&c&nkickall %arg-1%&r&c<--&o[HERE]
+    trigger:
+        if arg-1 is not set:
+            send "&cUsage: /kickall <text>"
+            stop
+        else:
+            kick all players due to arg-1
+            stop
+
+command /disconnect [<offline player>] [<text>]:
+    trigger:
+        if player is an op:
+            if arg-1 or arg-2 is not set:
+                send "&cUsage: /disconnect <player> <text>" to player
+            else:
+                if arg-1 is offline:
+                    send "&c%arg-1% is offline."
+                else:
+                    kick arg-1 due to arg-2
+        else:
+            send "&cUnknown or incomplete command. See below for error%nl%&c&ndisconnect %arg-1% %arg-2%&r&c<--&o[HERE]" to player
+
+command /cavescare [<player>]:
+    trigger:
+        if player is an op:
+            if arg-1 is not set:
+                send "&cUsage: /cavescare <player>" to player
+            else:
+                play sound "ambient.cave" with volume 1.0 and pitch 1.0 to arg-1
+                send "&aSent cave scare to %arg-1%!" to player
+        else:
+            send "&cUnknown or incomplete command. See below for error%nl%&c&ncavescare %arg-1%<--&o[HERE]" to player  
+
+command /witherscare [<player>]:
+    trigger:
+        if player is an op:
+            if arg-1 is not set:
+                send "&cUsage: /witherscare <player>" to player
+            else:
+                send "&aSent wither scare to %arg-1%!" to player
+                play sound "entity.wither.spawn" with volume 1.0 and pitch 1.0 to arg-1
+                wait 4 seconds
+                play sound "entity.wither.death" with volume 1.0 and pitch 1.0 to arg-1
+        else:
+            send "&cUnknown or incomplete command. See below for error%nl%&c&nwitherscare %arg-1%<--&o[HERE]" to player
+
+command /enderscare [<player>]:
+    trigger:
+        if player is an op:
+            if arg-1 is not set:
+                send "&cUsage: /witherscare <player>" to player
+            else:
+                send "&aSent ender scare to %arg-1%!" to player
+                play sound "entity.ender_dragon.ambient" with volume 1.0 and pitch 1.0 to arg-1
+                wait 2 seconds
+                play sound "entity.ender_dragon.death" with volume 1.0 and pitch 1.0 to arg-1
+        else:
+            send "&cUnknown or incomplete command. See below for error%nl%&c&nenderscare %arg-1%<--&o[HERE]" to player 
+
+command /creeperscare [<player>]:
+    trigger:
+        if player is an op:
+            if arg-1 is not set:
+                send "&cUsage: /creeperscare <player>" to player
+            else:
+                send "&aSent creeper scare to %arg-1%!" to player
+                play sound "entity.creeper.primed" with volume 1.0 and pitch 1.0 to arg-1
+                wait 2 seconds
+                play sound "minecraft:entity.generic.explode" with volume 1.0 and pitch 1.0 to arg-1
+        else:
+            send "&cUnknown or incomplete command. See below for error%nl%&c&ncreeperscare %arg-1%<--&o[HERE]" to player 
+
+command /reload:
+    trigger:
+        if player is an op:
+            send "&cReload has been disabled. Use /restart instead."
+            stop
+        else:
+            send "&cUnknown or incomplete command. See below for error%nl%&c&nreload&c<--&o[HERE]" to player 
+
+command /freeze [<offline player>]:
+    trigger:
+        if player has permission "freeze.use":
+            if arg-1 is set:
+                if arg-1 is online:
+                    if arg-1 has permission "freeze.bypass":
+                        send "&cYou may not freeze this player." to player
+                        stop
+                    else:
+                        if {frozen::%arg-1's uuid%} = false:
+                            set {frozen::%arg-1's uuid%} to true
+                            send "&cSuccessfully frozen %arg-1%." to player
+                        else:
+                            set {frozen::%arg-1's uuid%} to false
+                            send "&aSuccessfully unfrozen %arg-1%." to player
+                else:
+                    send "&c%arg-1% is offline."
+            else:
+                send "&cUsage: /freeze <player>" to player
+        else:
+            if arg-1 is set:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&nfreeze %arg-1%&c<--&o[HERE]" to player
+            else:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&nfreeze&c<--&o[HERE]" to player 
+
+on join:
+    if {frozen::%player's uuid%} is not set:
+        set {frozen::%player's uuid%} to false
+
+on player move:
+    if {frozen::%player's uuid%} is true:
+        if x-coord of event-location is not x-coord of player's location:
+            set {_moved} to true
+        else if y-coord of event-location is not x-coord of player's location:
+            set {_moved} to true
+        else if z-coord of event-location is not z-coord of player's location:
+            set {_moved} to true
+        
+        if {_moved} is true:
+            cancel event
+            send "&cYou have been frozen." to player
+    else:
+        stop
+
+on block break:
+    if {frozen::%player's uuid%} is true:
+        cancel event
+    else:
+        stop
+
+on block place:
+    if {frozen::%player's uuid%} is true:
+        cancel event
+    else:
+        stop
+
+on command:
+    if {frozen::%player's uuid%} is true:
+        send "&cYou may not use commands while frozen." to player
+        cancel event
+    else:
+        stop
+
+command /dickheads:
+    trigger:
+        send "Bailyn H." to all players
+        stop

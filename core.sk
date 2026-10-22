@@ -3,7 +3,7 @@ variables:
     {block.break} = true
     {argument} = ""
     {frozen::*} = false
-    {ver} = 1.1.1
+    {ver} = "1.1.1-alpha"
 
 command /clearchat:
     trigger:
@@ -270,7 +270,7 @@ command /core [<text>]:
             if arg-1 is not set:
                 send "&cUsage: /core (version/reload)" to sender
             if arg-1 is "version":
-                send "&cCore is running on v%ver%."
+                send "&cCore is running on v%{ver}%."
             if arg-1 is "reload":
                 execute console command "sk reload core"
                 send "&aReloaded Core." to sender
@@ -280,7 +280,7 @@ command /core [<text>]:
             if arg-1 is not set:
                 send "&cUsage: /core (version/reload)" to sender
             if arg-1 is "version":
-                send "&cCore is running on v%ver%."
+                send "&cCore is running on v%{ver}%."
             if arg-1 is "reload":
                 execute console command "sk reload core"
                 send "&aReloaded Core." to sender

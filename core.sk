@@ -269,9 +269,9 @@ command /core [<text>]:
         if executor is console:
             if arg-1 is not set:
                 send "&cUsage: /core (version/reload)" to sender
-            if arg-1 is "version":
+            else if arg-1 is "version":
                 send "&cCore is running on v%{ver}%."
-            if arg-1 is "reload":
+            else if arg-1 is "reload":
                 execute console command "sk reload core"
                 send "&aReloaded Core." to sender
             else:
@@ -279,9 +279,9 @@ command /core [<text>]:
         else if player has permission "core.use":
             if arg-1 is not set:
                 send "&cUsage: /core (version/reload)" to sender
-            if arg-1 is "version":
+            else if arg-1 is "version":
                 send "&cCore is running on v%{ver}%."
-            if arg-1 is "reload":
+            else if arg-1 is "reload":
                 execute console command "sk reload core"
                 send "&aReloaded Core." to sender
             else:

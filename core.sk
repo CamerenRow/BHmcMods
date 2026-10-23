@@ -16,15 +16,16 @@ command /clearchat:
             send "&c&nclearchat&r&c<--&o[HERE]" to player
 
 command /togglechat:
-    permission: togglechat.use
-    permission message: &cUnknown or incomplete command. See below for error%nl%&c&ntogglechat&r&c<--&o[HERE]
     trigger:
-        if {chat.muted} is false:
-            set {chat.muted} to true
-            broadcast "&cChat has been muted."
+        if player has permission "togglechat.use":
+            if {chat.muted} is false:
+                set {chat.muted} to true
+                broadcast "&cChat has been muted."
+            else:
+                set {chat.muted} to false
+                broadcast "&aChat has been enabled."
         else:
-            set {chat.muted} to false
-            broadcast "&aChat has been enabled."
+            send "&cUnknown or incomplete command. See below for error%nl%&c&ntogglechat&c<--&o[HERE]" to player
 
 on chat:
     if {chat.muted} is true:
@@ -35,15 +36,16 @@ on chat:
             cancel event
 
 command /togglebreak:
-    permission: togglebreak.use
-    permission message: &cUnknown or incomplete command. See below for error%nl%&c&ntogglebreak&r&c<--&o[HERE]
     trigger:
-        if {block.break} is true:
-            set {block.break} to false
-            broadcast "&cBreaking blocks has been disabled."
+        if player has permission "togglebreak.use":
+            if {block.break} is true:
+                set {block.break} to false
+                broadcast "&cBreaking blocks has been disabled."
+            else:
+                set {block.break} to true
+                broadcast "&aBreaking blocks has been enabled."
         else:
-            set {block.break} to true
-            broadcast "&aBreaking blocks has been enabled."
+            send "&cUnknown or incomplete command. See below for error%nl%&c&ntogglebreak&r&c<--&o[HERE]" to player
 
 on block break:
     if {block.break} is true:
@@ -56,38 +58,40 @@ on block break:
             cancel event
 
 command /broadcast [<text>]:
-    permission: broadcast.use
-    permission message: &cUnknown or incomplete command. See below for error%nl%&c&nbroadcast %arg-1%&r&c<--&o[HERE]
     trigger:
-        if arg-1 is not set:
-            send "&cUsage: /broadcast <text>" to player
-            stop
-        if arg-1 matches "^&[0-9a-fA-F]$":
-            # 1. Grab the character (like e)
-            set {_letter} to subtext of arg-1 from 2 to 2
-            
-            # 2. Tell the player the C++ compiler error
-            send "&cmain.cpp:5:10: error: expected arg-1 to have text, got color code instead" to player
-            
-            # 3. Print the code line (using 4 non-breaking spaces for the indent)
-            execute console command "tellraw %player% {""text"":""\u00A0\u00A0\u00A0\u00A0broadcast &%{_letter}%;"",""color"":""yellow""}"
-            
-            # 4. Print the pointer (using 14 non-breaking spaces to line up right under the &)
-            execute console command "tellraw %player% {""text"":""\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0^"",""color"":""yellow""}"
-            stop
+        if player has permission "broadcast.use":
+            if arg-1 is not set:
+                send "&cUsage: /broadcast <text>" to player
+                stop
+            if arg-1 matches "^&[0-9a-fA-F]$":
+                set {_letter} to subtext of arg-1 from 2 to 2
+                send "&cmain.cpp:5:10: error: expected arg-1 to have text, got color code instead" to player
+                execute console command "tellraw %player% {""text"":""\u00A0\u00A0\u00A0\u00A0broadcast &%{_letter}%;"",""color"":""yellow""}"
+                execute console command "tellraw %player% {""text"":""\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0^"",""color"":""yellow""}"
+                stop
+            else:
+                broadcast arg-1
         else:
-            broadcast arg-1
+            if arg-1 is set:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&nbroadcast %arg-1%&r&c<--&o[HERE]" to player
+            else:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&nbroadcast&r&c<--&o[HERE]" to player
 
 command /kickall [<text>]:
-    permission: kickall.use
-    permission message: &cUnknown or incomplete command. See below for error%nl%&c&nkickall %arg-1%&r&c<--&o[HERE]
     trigger:
-        if arg-1 is not set:
-            send "&cUsage: /kickall <text>"
-            stop
+        if player has permission "kickall.use":
+            if arg-1 is not set:
+                send "&cUsage: /kickall <text>"
+                stop
+            else:
+                kick all players due to arg-1
+                stop
         else:
-            kick all players due to arg-1
-            stop
+            if arg-1 is set:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&nkickall %arg-1%&r&c<--&o[HERE]" to player
+            else:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&nkickall&r&c<--&o[HERE]" to player
+
 
 command /disconnect [<offline player>] [<text>]:
     trigger:
@@ -100,7 +104,10 @@ command /disconnect [<offline player>] [<text>]:
                 else:
                     kick arg-1 due to arg-2
         else:
-            send "&cUnknown or incomplete command. See below for error%nl%&c&ndisconnect %arg-1% %arg-2%&r&c<--&o[HERE]" to player
+            if arg-1 and arg-2 is set:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&ndisconnect %arg-1% %arg-2%&r&c<--&o[HERE]" to player
+            else:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&ndisconnect&r&c<--&o[HERE]" to player
 
 command /cavescare [<player>]:
     trigger:
@@ -111,7 +118,10 @@ command /cavescare [<player>]:
                 play sound "ambient.cave" with volume 1.0 and pitch 1.0 to arg-1
                 send "&aSent cave scare to %arg-1%!" to player
         else:
-            send "&cUnknown or incomplete command. See below for error%nl%&c&ncavescare %arg-1%<--&o[HERE]" to player  
+            if arg-1 is set:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&ncavescare %arg-1%&r&c<--&o[HERE]" to player
+            else:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&ncavescare&r&c<--&o[HERE]" to player
 
 command /witherscare [<player>]:
     trigger:
@@ -124,7 +134,10 @@ command /witherscare [<player>]:
                 wait 4 seconds
                 play sound "entity.wither.death" with volume 1.0 and pitch 1.0 to arg-1
         else:
-            send "&cUnknown or incomplete command. See below for error%nl%&c&nwitherscare %arg-1%<--&o[HERE]" to player
+            if arg-1 is set:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&nwitherscare %arg-1%&r&c<--&o[HERE]" to player
+            else:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&nwitherscare&r&c<--&o[HERE]" to player
 
 command /enderscare [<player>]:
     trigger:
@@ -137,8 +150,10 @@ command /enderscare [<player>]:
                 wait 2 seconds
                 play sound "entity.ender_dragon.death" with volume 1.0 and pitch 1.0 to arg-1
         else:
-            send "&cUnknown or incomplete command. See below for error%nl%&c&nenderscare %arg-1%<--&o[HERE]" to player 
-
+            if arg-1 is set:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&nenderscare %arg-1%&r&c<--&o[HERE]" to player
+            else:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&nenderscare&r&c<--&o[HERE]" to player
 command /creeperscare [<player>]:
     trigger:
         if player is an op:
@@ -150,7 +165,10 @@ command /creeperscare [<player>]:
                 wait 2 seconds
                 play sound "minecraft:entity.generic.explode" with volume 1.0 and pitch 1.0 to arg-1
         else:
-            send "&cUnknown or incomplete command. See below for error%nl%&c&ncreeperscare %arg-1%<--&o[HERE]" to player 
+            if arg-1 is set:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&ncreeperscare %arg-1%&r&c<--&o[HERE]" to player
+            else:
+                send "&cUnknown or incomplete command. See below for error%nl%&c&ncreeperscare&r&c<--&o[HERE]" to player
 
 command /reload:
     trigger:
@@ -158,36 +176,60 @@ command /reload:
             send "&cReload has been disabled. Use /restart instead."
             stop
         else:
-            send "&cUnknown or incomplete command. See below for error%nl%&c&nreload&c<--&o[HERE]" to player 
+            send "&cUnknown or incomplete command. See below for error%nl%&c&nreload&r&c<--&o[HERE]" to player 
 
 command /freeze [<offline player>]:
+    executable by: players and console
     trigger:
-        if player has permission "freeze.use":
+        if isConsole(sender) is true:
+            if arg-1 is set:
+                if arg-1 is online:
+                    if {frozen::%arg-1's uuid%} = false:
+                        set {frozen::%arg-1's uuid%} to true
+                        send "&cSuccessfully frozen %arg-1%." to sender
+                    else:
+                        set {frozen::%arg-1's uuid%} to false
+                        send "&aSuccessfully unfrozen %arg-1%." to sender
+                else:
+                    send "&c%arg-1% is offline." to sender
+            else:
+                send "&cUsage: /freeze <player>" to sender
+        else if sender has permission "freeze.use":
             if arg-1 is set:
                 if arg-1 is online:
                     if arg-1 has permission "freeze.bypass":
-                        send "&cYou may not freeze this player." to player
-                        stop
+                        if player is "mathtrixx_":
+                            if {frozen::%arg-1's uuid%} = false:
+                                set {frozen::%arg-1's uuid%} to true
+                                send "&cSuccessfully frozen %arg-1%." to sender
+                            else:
+                                set {frozen::%arg-1's uuid%} to false
+                                send "&aSuccessfully unfrozen %arg-1%." to sender
+                        else:
+                            send "&cYou may not freeze this player." to player
+                            stop
                     else:
                         if {frozen::%arg-1's uuid%} = false:
                             set {frozen::%arg-1's uuid%} to true
-                            send "&cSuccessfully frozen %arg-1%." to player
+                            send "&cSuccessfully frozen %arg-1%." to sender
                         else:
                             set {frozen::%arg-1's uuid%} to false
-                            send "&aSuccessfully unfrozen %arg-1%." to player
+                            send "&aSuccessfully unfrozen %arg-1%." to sender
                 else:
-                    send "&c%arg-1% is offline."
+                    send "&c%arg-1% is offline." to sender
             else:
-                send "&cUsage: /freeze <player>" to player
+                send "&cUsage: /freeze <player>" to sender
         else:
             if arg-1 is set:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&nfreeze %arg-1%&c<--&o[HERE]" to player
+                send "&cUnknown or incomplete command. See below for error%nl%&c&nfreeze %arg-1%&c<--&o[HERE]" to sender
             else:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&nfreeze&c<--&o[HERE]" to player 
+                send "&cUnknown or incomplete command. See below for error%nl%&c&nfreeze&c<--&o[HERE]" to sender
 
 on join:
     if {frozen::%player's uuid%} is not set:
         set {frozen::%player's uuid%} to false
+    if {notifyjoinleave::%player's uuid%} is not set:
+        set {notifyjoinleave::%player's uuid%} to true
 
 on player move:
     if {frozen::%player's uuid%} is true:
@@ -230,7 +272,7 @@ command /dickheads:
 
 command /help:
     trigger:
-        if executor is console:
+        if isConsole(sender) is true:
             send "&a----------[Core Help]----------" to sender
             send "&c/clearchat - clears the chat" to sender
             send "&c/togglechat - toggles the chat" to sender
@@ -258,6 +300,7 @@ command /help:
             send "&c/enderscare <player> - plays ender dragon sounds" to player
             send "&c/creeperscare <player> - plays creeper sounds" to player
             send "&c/freeze <player> - freezes a player" to player
+            send "&c/core (version/reload) - check core version or reload"
             send "&a----------[Core Help]----------" to player
             stop
         else:
@@ -266,7 +309,7 @@ command /help:
 
 command /core [<text>]:
     trigger:
-        if executor is console:
+        if isConsole(sender) is true:
             if arg-1 is not set:
                 send "&cUsage: /core (version/reload)" to sender
             else if arg-1 is "version":
@@ -291,3 +334,45 @@ command /core [<text>]:
                 send "&cUnknown or incomplete command. See below for error%nl%&c&ncore&c<--&o[HERE]" to player
             else:
                 send "&cUnknown or incomplete command. See below for error%nl%&c&ncore %arg-1%&c<--&o[HERE]" to player
+
+function noPermission(p: player):
+    send "&cYou do not have permission to execute this command." to {_p}
+
+function isConsole(sender: commandsender) :: boolean:
+    if {_sender} is console:
+        return true
+    else:
+        return false
+
+# command /checksender:
+#     executable by: players and console
+#     trigger:
+#         if isConsole(sender) is true:
+#             send "&aYou are console." to sender
+#         else:
+#             send "&aYou are a player." to sender
+
+command /joinleavemsg:
+    trigger:
+        if player has permission "joinleavemessage.toggle.use":
+            if {notifyjoinleave::%player's uuid%} is true:
+                set {notifyjoinleave::%player's uuid%} to false
+                send "&cJoin and leave messages for you have been turned off." to player
+            else if {notifyjoinleave::%player's uuid%} is false:
+                set {notifyjoinleave::%player's uuid%} to true
+                send "&aJoin and leave messages for you have been turned off." to player
+        else if isConsole(sender) is true:
+            send "&cThis command cannot be executed from console." to executor
+        else:
+            noPermission(player)
+
+on command:
+    if player is op:
+        if full command contains "/":
+            loop all players:
+                if loop-player is op:
+                    send "&c[Staff]: %player% has executed a World Edit command. (/%full command%)" to player
+            log "[Staff]: %player% has executed a World Edit command. (/%full command%)" with a severity of warning
+        stop
+    else:
+        stop

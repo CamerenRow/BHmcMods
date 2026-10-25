@@ -383,4 +383,4 @@ command /backup-notify:
         loop all players:
             if loop-player is op:
                 send "&6Staff » &cThe server has been successfully saved and backed-up."
-        log "[Staff]: The server has been successfully saved and backed-up." with a severity of info
+        send "Staff » The server has been successfully saved and backed-up." to console

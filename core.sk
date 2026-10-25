@@ -4,6 +4,7 @@ variables:
     {argument} = ""
     {frozen::*} = false
     {ver} = "1.1.1-alpha"
+    {pvp} = true
 
 command /clearchat:
     trigger:
@@ -12,8 +13,7 @@ command /clearchat:
                 send "&r"
             send "&aChat cleared by &b%player%&a!" to all players
         else: 
-            send "&cUnknown or incomplete command. See below for error" to player
-            send "&c&nclearchat&r&c<--&o[HERE]" to player
+            noPermission(sender)
 
 command /togglechat:
     trigger:
@@ -25,7 +25,7 @@ command /togglechat:
                 set {chat.muted} to false
                 broadcast "&aChat has been enabled."
         else:
-            send "&cUnknown or incomplete command. See below for error%nl%&c&ntogglechat&c<--&o[HERE]" to player
+            noPermission(sender)
 
 on chat:
     if {chat.muted} is true:
@@ -45,7 +45,7 @@ command /togglebreak:
                 set {block.break} to true
                 broadcast "&aBreaking blocks has been enabled."
         else:
-            send "&cUnknown or incomplete command. See below for error%nl%&c&ntogglebreak&r&c<--&o[HERE]" to player
+            noPermission(sender)
 
 on block break:
     if {block.break} is true:
@@ -72,10 +72,7 @@ command /broadcast [<text>]:
             else:
                 broadcast arg-1
         else:
-            if arg-1 is set:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&nbroadcast %arg-1%&r&c<--&o[HERE]" to player
-            else:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&nbroadcast&r&c<--&o[HERE]" to player
+            noPermission(sender)
 
 command /kickall [<text>]:
     trigger:
@@ -87,10 +84,7 @@ command /kickall [<text>]:
                 kick all players due to arg-1
                 stop
         else:
-            if arg-1 is set:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&nkickall %arg-1%&r&c<--&o[HERE]" to player
-            else:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&nkickall&r&c<--&o[HERE]" to player
+            noPermission(sender)
 
 
 command /disconnect [<offline player>] [<text>]:
@@ -104,10 +98,7 @@ command /disconnect [<offline player>] [<text>]:
                 else:
                     kick arg-1 due to arg-2
         else:
-            if arg-1 and arg-2 is set:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&ndisconnect %arg-1% %arg-2%&r&c<--&o[HERE]" to player
-            else:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&ndisconnect&r&c<--&o[HERE]" to player
+            noPermission(sender)
 
 command /cavescare [<player>]:
     trigger:
@@ -118,10 +109,7 @@ command /cavescare [<player>]:
                 play sound "ambient.cave" with volume 1.0 and pitch 1.0 to arg-1
                 send "&aSent cave scare to %arg-1%!" to player
         else:
-            if arg-1 is set:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&ncavescare %arg-1%&r&c<--&o[HERE]" to player
-            else:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&ncavescare&r&c<--&o[HERE]" to player
+            noPermission(sender)
 
 command /witherscare [<player>]:
     trigger:
@@ -134,10 +122,7 @@ command /witherscare [<player>]:
                 wait 4 seconds
                 play sound "entity.wither.death" with volume 1.0 and pitch 1.0 to arg-1
         else:
-            if arg-1 is set:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&nwitherscare %arg-1%&r&c<--&o[HERE]" to player
-            else:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&nwitherscare&r&c<--&o[HERE]" to player
+            noPermission(sender)
 
 command /enderscare [<player>]:
     trigger:
@@ -150,10 +135,7 @@ command /enderscare [<player>]:
                 wait 2 seconds
                 play sound "entity.ender_dragon.death" with volume 1.0 and pitch 1.0 to arg-1
         else:
-            if arg-1 is set:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&nenderscare %arg-1%&r&c<--&o[HERE]" to player
-            else:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&nenderscare&r&c<--&o[HERE]" to player
+            noPermission(sender)
 command /creeperscare [<player>]:
     trigger:
         if player is an op:
@@ -165,18 +147,14 @@ command /creeperscare [<player>]:
                 wait 2 seconds
                 play sound "minecraft:entity.generic.explode" with volume 1.0 and pitch 1.0 to arg-1
         else:
-            if arg-1 is set:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&ncreeperscare %arg-1%&r&c<--&o[HERE]" to player
-            else:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&ncreeperscare&r&c<--&o[HERE]" to player
+            noPermission(sender)
 
 command /reload:
     trigger:
         if player is an op:
-            send "&cReload has been disabled. Use /restart instead."
-            stop
+            commandDisabled(sender)
         else:
-            send "&cUnknown or incomplete command. See below for error%nl%&c&nreload&r&c<--&o[HERE]" to player 
+            noPermission(sender)
 
 command /freeze [<offline player>]:
     executable by: players and console
@@ -220,10 +198,7 @@ command /freeze [<offline player>]:
             else:
                 send "&cUsage: /freeze <player>" to sender
         else:
-            if arg-1 is set:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&nfreeze %arg-1%&c<--&o[HERE]" to sender
-            else:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&nfreeze&c<--&o[HERE]" to sender
+            noPermission(sender)
 
 on join:
     if {frozen::%player's uuid%} is not set:
@@ -330,10 +305,7 @@ command /core [<text>]:
             else:
                 send "&cThat was not a valid selection. Use /core for help." to sender
         else:
-            if arg-1 is not set:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&ncore&c<--&o[HERE]" to player
-            else:
-                send "&cUnknown or incomplete command. See below for error%nl%&c&ncore %arg-1%&c<--&o[HERE]" to player
+            noPermission(sender)
 
 function noPermission(p: player):
     send "&cYou do not have permission to execute this command." to {_p}
@@ -343,6 +315,9 @@ function isConsole(sender: commandsender) :: boolean:
         return true
     else:
         return false
+
+function commandDisabled(p: player):
+    send "&cThis command has been disabled." to {_p}
 
 # command /checksender:
 #     executable by: players and console
@@ -372,7 +347,7 @@ on command:
             loop all players:
                 if loop-player is op:
                     send "&6Staff » &c%player% has executed a World Edit command. (/%full command%)" to player
-            log "[Staff]: %player% has executed a World Edit command. (/%full command%)" with a severity of severe
+            log "Staff » %player% has executed a World Edit command. (/%full command%)" with a severity of severe
         stop
     else:
         stop
@@ -384,3 +359,28 @@ command /backup-notify:
             if loop-player is op:
                 send "&6Staff » &cThe server has been successfully saved and backed-up." to loop-player
         send "Staff » The server has been successfully saved and backed-up." to console
+
+command /nuke:
+    trigger:
+        if player is op:
+            send "&cThis command has been disabled." to player
+        else:
+            noPermission(sender)
+
+command /togglepvp:
+    trigger:
+        if player is op:
+            if {pvp} is true:
+                set {pvp} to false
+                send "&cPVP has been disabled." to player
+            else:
+                set {pvp} to true
+                send "&aPVP has been enabled." to player
+
+on damage of player:
+    if attacker is a player:
+        if {pvp} is true:
+            stop
+        else if {pvp} is false:
+            cancel event
+            send "&cYou cannot attack that player as PVP has been disabled." to attacker

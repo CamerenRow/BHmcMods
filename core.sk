@@ -276,6 +276,8 @@ command /help:
             send "&c/creeperscare <player> - plays creeper sounds" to player
             send "&c/freeze <player> - freezes a player" to player
             send "&c/core (version/reload) - check core version or reload"
+            send "&c/joinleavemsg - toggles the join or leave message of a player"
+            send "&c/togglepvp - toggles pvp"
             send "&a----------[Core Help]----------" to player
             stop
         else:

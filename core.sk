@@ -354,6 +354,9 @@ command /help:
             send "&c/enderscare <player> - plays ender dragon sounds" to sender
             send "&c/creeperscare <player> - plays creeper sounds" to sender
             send "&c/freeze <player> - freezes a player" to sender
+            send "&c/core (version/reload) - check core version or reload" to sender
+            send "&c/joinleavemsg - toggles the join or leave message of a player" to sender
+            send "&c/togglepvp - toggles pvp" to sender
             send "&a----------[Core Help]----------" to sender
             stop
         else if player has permission "help.use":
@@ -369,9 +372,9 @@ command /help:
             send "&c/enderscare <player> - plays ender dragon sounds" to player
             send "&c/creeperscare <player> - plays creeper sounds" to player
             send "&c/freeze <player> - freezes a player" to player
-            send "&c/core (version/reload) - check core version or reload"
-            send "&c/joinleavemsg - toggles the join or leave message of a player"
-            send "&c/togglepvp - toggles pvp"
+            send "&c/core (version/reload) - check core version or reload" to player
+            send "&c/joinleavemsg - toggles the join or leave message of a player" to player
+            send "&c/togglepvp - toggles pvp" to player
             send "&a----------[Core Help]----------" to player
             stop
         else:

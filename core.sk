@@ -372,7 +372,7 @@ on command:
             loop all players:
                 if loop-player is op:
                     send "&6Staff » &c%player% has executed a World Edit command. (/%full command%)" to player
-            log "[Staff]: %player% has executed a World Edit command. (/%full command%)" with a severity of warning
+            log "[Staff]: %player% has executed a World Edit command. (/%full command%)" with a severity of severe
         stop
     else:
         stop
@@ -382,5 +382,5 @@ command /backup-notify:
     trigger:
         loop all players:
             if loop-player is op:
-                send "&6Staff » &cThe server has been successfully saved and backed-up."
+                send "&6Staff » &cThe server has been successfully saved and backed-up." to loop-player
         send "Staff » The server has been successfully saved and backed-up." to console
